@@ -1,0 +1,140 @@
+{
+  "protocol": "nexio.schedule",
+  "version": 4,
+  "action": "replace",
+  "schedule_name": "示例课表",
+  "settings": {
+    "class_start_time": "2026/09/13",
+    "current_week": 7,
+    "total_weeks": 18,
+    "morning_sections": 6,
+    "afternoon_sections": 5,
+    "evening_sections": 3
+  },
+  "times": {
+    "morning": {
+      "1": "08:00-08:40",
+      "2": "08:50-09:30",
+      "3": "09:40-10:20",
+      "4": "10:30-11:10",
+      "5": "11:20-12:00",
+      "6": "12:10-14:30"
+    },
+    "afternoon": {
+      "1": "14:40-15:20",
+      "2": "15:30-16:10",
+      "3": "16:20-17:00",
+      "4": "17:10-17:50",
+      "5": "18:00-18:40"
+    },
+    "evening": {
+      "1": "19:30-20:10",
+      "2": "20:20-21:00",
+      "3": "21:10-21:50"
+    }
+  },
+  "courses": [
+    {
+      "id": "c1",
+      "name": "高等数学",
+      "location": "A101",
+      "teacher": "张老师",
+      "dayOfWeek": 1,
+      "startSection": 1,
+      "endSection": 2,
+      "isCustomTime": false,
+      "customStartTime": "",
+      "customEndTime": "",
+      "startWeek": 2,
+      "endWeek": 12,
+      "weekType": 0,
+      "selectedWeeks": []
+    },
+    {
+      "id": "c2",
+      "name": "大学英语",
+      "location": "B202",
+      "teacher": "李老师",
+      "dayOfWeek": 1,
+      "startSection": 3,
+      "endSection": 4,
+      "isCustomTime": false,
+      "customStartTime": "",
+      "customEndTime": "",
+      "startWeek": 1,
+      "endWeek": 18,
+      "weekType": 1,
+      "selectedWeeks": []
+    },
+    {
+      "id": "c3",
+      "name": "数据结构",
+      "location": "C303",
+      "teacher": "王老师",
+      "dayOfWeek": 2,
+      "startSection": 1,
+      "endSection": 2,
+      "isCustomTime": false,
+      "customStartTime": "",
+      "customEndTime": "",
+      "startWeek": 1,
+      "endWeek": 18,
+      "weekType": 0,
+      "selectedWeeks": []
+    },
+    {
+      "id": "c4",
+      "name": "体育",
+      "location": "田径场",
+      "teacher": "孙老师",
+      "dayOfWeek": 4,
+      "startSection": 7,
+      "endSection": 9,
+      "isCustomTime": false,
+      "customStartTime": "",
+      "customEndTime": "",
+      "startWeek": 1,
+      "endWeek": 18,
+      "weekType": 0,
+      "selectedWeeks": []
+    },
+    {
+      "id": "c5",
+      "name": "晚自习",
+      "location": "E505",
+      "teacher": "",
+      "dayOfWeek": 3,
+      "startSection": 12,
+      "endSection": 14,
+      "isCustomTime": true,
+      "customStartTime": "19:30",
+      "customEndTime": "20:30",
+      "startWeek": 1,
+      "endWeek": 18,
+      "weekType": 0,
+      "selectedWeeks": []
+    }
+  ],
+  "holidays": [
+    {
+      "date": "2026-10-01",
+      "endDate": "2026-10-07",
+      "name": "国庆节",
+      "type": 0,
+      "followDate": "",
+      "followWeek": -1,
+      "followWeekday": -1,
+      "custom": false
+    },
+    {
+      "date": "2026-10-10",
+      "endDate": "",
+      "name": "补班",
+      "type": 1,
+      "followDate": "2026-10-12",
+      "followWeek": 5,
+      "followWeekday": -1,
+      "custom": false
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+[package]
+name = "nexio-band-sync"
+version = "1.0.0"
+edition = "2021"
+description = "Nexio 课程表 AstroBox 插件：导入课表 JSON 并推送到手环端快应用"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+astrobox-ng-wit = "0.4"
+serde_json = "1.0"
+tracing = "0.1"
+tracing-subscriber = "0.3"
+tracing-appender = "=0.2.3"
