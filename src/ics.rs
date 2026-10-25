@@ -392,6 +392,7 @@ pub fn ics_to_payload(text: &str, file_name: &str) -> Result<Value, String> {
         "times": Value::Object(times),
         "courses": courses,
         "holidays": [],
+        "overrides": [],
     }))
 }
 

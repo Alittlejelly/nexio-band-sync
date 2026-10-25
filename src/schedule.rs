@@ -127,6 +127,28 @@ pub(crate) fn import_str(text: &str) -> Result<Imported, String> {
     let current_week = fmt_num(settings.get("current_week"));
     let holidays = obj["holidays"].as_array().map(|a| a.len()).unwrap_or(0);
 
+    // v4.1 逐日裁决覆盖表：透传给手环端，非法形态归一为空数组；
+    // 只统计 date 合法（YYYY-MM-DD）的条目数给摘要展示（手环端会自行丢弃非法条目）
+    let overrides_count = match obj.get_mut("overrides") {
+        Some(Value::Array(list)) => {
+            let valid = list
+                .iter()
+                .filter(|o| {
+                    o.get("date")
+                        .and_then(Value::as_str)
+                        .map(|d| d.len() == 10 && d.as_bytes()[4] == b'-' && d.as_bytes()[7] == b'-')
+                        .unwrap_or(false)
+                })
+                .count();
+            valid
+        }
+        Some(_) => {
+            obj.insert("overrides".into(), json!([]));
+            0
+        }
+        None => 0,
+    };
+
     let json = serde_json::to_string(&root).map_err(|e| format!("JSON 序列化失败：{e}"))?;
 
     Ok(Imported {
@@ -138,6 +160,7 @@ pub(crate) fn import_str(text: &str) -> Result<Imported, String> {
             total_weeks,
             current_week,
             holidays,
+            overrides: overrides_count,
             warnings,
         },
     })
@@ -257,6 +280,53 @@ mod tests {
             .warnings
             .iter()
             .any(|w| w.contains("class_start_time") || w.contains("settings")));
+    }
+
+    #[test]
+    fn overrides_passthrough_v41() {
+        let body = r#"{
+            "protocol": "nexio.schedule",
+            "settings": { "class_start_time": "2026/09/13", "total_weeks": 18 },
+            "courses": [ { "id": "c1" } ],
+            "overrides": [
+                { "date": "2026-10-12", "holiday": false, "weekday": 1, "week": 5, "courses": [] },
+                { "date": "2026-10-01", "holiday": true, "holidayName": "国庆节" },
+                { "bad": "entry" }
+            ]
+        }"#;
+        let out = import_json(body.as_bytes()).unwrap();
+        let v: Value = serde_json::from_str(&out.json).unwrap();
+        // 原样透传给手环（手环端会自行丢弃 date 不合法的条目）
+        assert_eq!(v["overrides"].as_array().unwrap().len(), 3);
+        // 摘要只统计 date 合法的条目
+        assert_eq!(out.summary.overrides, 2);
+        assert!(out
+            .summary
+            .detail_lines()
+            .iter()
+            .any(|l| l.contains("逐日覆盖：2 天")));
+    }
+
+    #[test]
+    fn invalid_overrides_normalized_to_empty() {
+        let body = r#"{
+            "protocol": "nexio.schedule",
+            "settings": {},
+            "courses": [],
+            "overrides": "oops"
+        }"#;
+        let out = import_json(body.as_bytes()).unwrap();
+        let v: Value = serde_json::from_str(&out.json).unwrap();
+        assert_eq!(v["overrides"], serde_json::json!([]));
+        assert_eq!(out.summary.overrides, 0);
+    }
+
+    #[test]
+    fn missing_overrides_ok() {
+        let out = import_json(full_v4().as_bytes()).unwrap();
+        let v: Value = serde_json::from_str(&out.json).unwrap();
+        assert!(v.get("overrides").is_none());
+        assert_eq!(out.summary.overrides, 0);
     }
 
     #[test]

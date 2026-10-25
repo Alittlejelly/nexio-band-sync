@@ -9,6 +9,8 @@ pub struct Summary {
     pub total_weeks: String,
     pub current_week: String,
     pub holidays: usize,
+    /// v4.1 逐日裁决覆盖（overrides）的有效条目数
+    pub overrides: usize,
     pub warnings: Vec<String>,
 }
 
@@ -28,6 +30,9 @@ impl Summary {
             format!("总周数：{}　当前周：{}", self.total_weeks, self.current_week),
             format!("假期 / 调休：{} 条", self.holidays),
         ];
+        if self.overrides > 0 {
+            lines.push(format!("逐日覆盖：{} 天（v4.1）", self.overrides));
+        }
         for w in &self.warnings {
             lines.push(format!("⚠ {w}"));
         }

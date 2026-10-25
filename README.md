@@ -55,6 +55,7 @@ Rust 编写，支持导入 v4 整表 JSON 与 WakeUp 等应用导出的课表 IC
 | `times` | 节次时间表 `morning/afternoon/evening → {节次: "HH:MM-HH:MM"}` |
 | `courses` | 课程数组（缺失则拒绝） |
 | `holidays` | 假期 / 调休数组，调休优先用 `followDate`（绝对日期）换课 |
+| `overrides` | （v4.1 可选）逐日裁决覆盖表，条目含 `date`/`holiday`/`holidayName`/`weekday`/`week`/`courses`；手环命中该日整日采用，未覆盖日期按 v4.0 推算。插件原样透传，非法形态归一为空数组 |
 
 课程字段：`dayOfWeek`（1=周一…7=周日）、`startSection`/`endSection`（全局节次号）、
 `startWeek`/`endWeek`、`weekType`（0 全周 / 1 单周 / 2 双周）、`selectedWeeks`（非空时优先）、
